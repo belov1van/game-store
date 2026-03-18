@@ -11,7 +11,7 @@ body {
   min-height: 100vh;
 }
 
-.register-container {
+.login-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,7 +22,7 @@ body {
   box-shadow: 21px 19px 18px 6px rgba(0, 0, 0, 0.36);
 }
 
-.register-icon-container {
+.login-icon-container {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,26 +30,18 @@ body {
   gap: 10px;
 }
 
-.register-icon {
+.login-icon {
   width: 50px;
   height: 50px;
 }
 
-.register-card {
+.login-card {
   background: white;
   border-radius: 20px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   padding: 40px;
   width: 100%;
   max-width: 400px;
-}
-
-.register-title {
-  text-align: center;
-  color: #333;
-  font-size: 24px;
-  margin-bottom: 10px;
-  text-transform: lowercase;
 }
 
 .gamestore-title {
@@ -61,7 +53,7 @@ body {
   font-family: "Courier New", monospace;
 }
 
-.register-form {
+.login-form {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -86,7 +78,7 @@ body {
 .password-input-wrapper input {
   width: 100%;
   padding: 12px 16px;
-  padding-right: 45px; 
+  padding-right: 45px;
   border: 2px solid #e0e0e0;
   border-radius: 10px;
   font-size: 16px;
@@ -154,6 +146,38 @@ body {
   margin-top: 4px;
 }
 
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #666;
+  cursor: pointer;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.forgot-password {
+  color: #667eea;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
 .submit-btn {
   background: #667eea;
   color: white;
@@ -177,27 +201,28 @@ body {
   transform: translateY(0);
 }
 
-.login-link {
+.register-link {
   text-align: center;
   margin-top: 20px;
   color: #666;
   font-size: 14px;
 }
 
-.login-link a {
+.register-link a {
   color: #667eea;
   text-decoration: none;
   font-weight: 600;
   margin-left: 5px;
 }
 
-.login-link a:hover {
+.register-link a:hover {
   text-decoration: underline;
 }
 
-/* Адаптивность */
+/*Адаптивность*/
+
 @media (max-width: 480px) {
-  .register-card {
+  .login-card {
     padding: 30px 20px;
   }
 
@@ -208,5 +233,11 @@ body {
   .toggle-password {
     right: 8px;
     font-size: 18px;
+  }
+
+  .form-options {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
   }
 }
