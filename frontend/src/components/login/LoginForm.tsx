@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './LoginForm.css';
-import eyeOpenIcon from '../assets/icons/eye-open.svg';
-import eyeClosedIcon from '../assets/icons/eye-closed.svg';
+import eyeOpenIcon from '../../assets/icons/eye-open.svg';
+import eyeClosedIcon from '../../assets/icons/eye-closed.svg';
 
 interface LoginFormData {
   login: string;
@@ -112,10 +112,10 @@ const LoginForm: React.FC = () => {
 
           <div className="form-options">
             <label className="remember-me">
-              <input type="checkbox" /> Запомнить меня
+              <input type="checkbox" /> Remember me
             </label>
             <Link to="/forgot-password" className="forgot-password">
-              forgot your password?
+              Forgot your password?
             </Link>
           </div>
 
