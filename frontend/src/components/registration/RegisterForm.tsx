@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./RegisterForm.css";
-import eyeOpenIcon from "../assets/icons/eye-open.svg";
-import eyeClosedIcon from "../assets/icons/eye-closed.svg";
+import eyeOpenIcon from "../../assets/icons/eye-open.svg";
+import eyeClosedIcon from "../../assets/icons/eye-closed.svg";
 import { Link } from 'react-router-dom';
 
 interface FormData {
