@@ -15,11 +15,13 @@ body {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px;
+ 
 }
 
 .home-main {
   max-width: 1400px;
   margin: 0 auto;
+   flex: 1;
 }
 
 .games-grid {
@@ -190,3 +192,5 @@ body {
     font-size: 12px;
   }
 }
+
+
