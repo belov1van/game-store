@@ -3,6 +3,7 @@ import HomePage from './pages/Home/HomePage';
 import RegisterForm from './components/registration/RegisterForm';
 import LoginForm from './components/login/LoginForm';
 import AboutUs from './pages/About-us/AboutUs';
+import Profile from './pages/Profile/Profile';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/about" element={<AboutUs />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );

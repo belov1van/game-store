@@ -119,6 +119,74 @@
   }
 }
 
+.user-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: lowercase;
+  transition: all 0.3s;
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.user-profile-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.3s;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.logo:active {
+  transform: scale(0.98);
+}
+
+.logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.logo:hover .logo-icon {
+  transform: rotate(5deg);
+}
+
+.login-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.logo-text {
+  font-size: 28px;
+  font-weight: bold;
+  color: #667eea;
+  font-family: "Courier New", monospace;
+  transition: color 0.3s;
+}
+
+.logo:hover .logo-text {
+  color: #764ba2;
+}
+
+
 @media (max-width: 768px) {
   .home-header {
     padding: 20px;
@@ -136,4 +204,13 @@
     width: 24px;
     height: 24px;
   }
+
+  .user-profile-btn span {
+    display: none;
+  }
+  
+  .user-profile-btn {
+    padding: 8px;
+  }
+  
 }
