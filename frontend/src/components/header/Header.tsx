@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
 
 interface HeaderProps {
@@ -8,6 +8,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = React.useState('');
+  const navigate = useNavigate();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -17,12 +18,26 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
     }
   };
 
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
   return (
     <header className="home-header">
       <div className="header-content">
-        <div className="logo">
+        <div 
+          className="logo" 
+          onClick={handleLogoClick} 
+          role="button" 
+          tabIndex={0}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              handleLogoClick();
+            }
+          }}
+        >
           <div className="logo-icon">
-            <img src="../src/assets/icons/game-controller-svgrepo-com (1).svg" alt="" className='login-icon'/>
+            <img src="../src/assets/icons/game-controller-svgrepo-com (1).svg" alt="logo" className="login-icon"/>
           </div>
           <span className="logo-text">Gamestore</span>
         </div>
@@ -57,6 +72,10 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             />
           </div>
         </div>
+        
+        <Link to="/profile" className="user-profile-btn">
+          <span>profile</span>
+        </Link>
       </div>
     </header>
   );
