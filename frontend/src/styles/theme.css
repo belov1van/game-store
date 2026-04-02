@@ -1,0 +1,60 @@
+:root {
+  --bg-gradient-start: #667eea;
+  --bg-gradient-end: #764ba2;
+  --bg-primary: rgba(255, 255, 255, 0.95);
+  --bg-secondary: rgba(255, 255, 255, 0.9);
+  --bg-card: #ffffff;
+  --bg-input: #ffffff;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --border-color: #e0e0e0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --hover-bg: rgba(102, 126, 234, 0.1);
+  --header-bg: rgba(255, 255, 255, 0.95);
+  --footer-bg: rgba(0, 0, 0, 0.85);
+  --footer-text: rgba(255, 255, 255, 0.7);
+  --placeholder-color: #999999;
+  --success-color: #4caf50;
+  --error-color: #f44336;
+  --warning-color: #ff9800;
+}
+
+[data-theme="dark"] {
+  --bg-gradient-start: #1a1a2e;
+  --bg-gradient-end: #16213e;
+  --bg-primary: rgba(30, 30, 46, 0.95);
+  --bg-secondary: rgba(30, 30, 46, 0.9);
+  --bg-card: #1e1e2e;
+  --bg-input: #2a2a3e;
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --text-muted: #808080;
+  --border-color: #2a2a3e;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --hover-bg: rgba(102, 126, 234, 0.2);
+  --header-bg: rgba(30, 30, 46, 0.95);
+  --footer-bg: rgba(10, 10, 18, 0.95);
+  --footer-text: rgba(255, 255, 255, 0.6);
+  --placeholder-color: #666666;
+  --success-color: #4caf50;
+  --error-color: #f44336;
+  --warning-color: #ff9800;
+}
+
+* {
+  transition: background-color 0.3s ease, 
+              border-color 0.3s ease, 
+              color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+body {
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}

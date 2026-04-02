@@ -194,3 +194,42 @@ body {
 }
 
 
+[data-theme="dark"] .buy-btn { 
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+}
+
+
+[data-theme="dark"] .home-container {
+  background: #3a3a4e;
+}
+
+[data-theme="dark"] .game-card {
+  background: var(--bg-card);
+}
+
+[data-theme="dark"] .game-title-placeholder,
+[data-theme="dark"] .game-price-placeholder {
+  background: linear-gradient(90deg, #2a2a3e 0%, #3a3a4e 50%, #2a2a3e 100%);
+}
+
+[data-theme="dark"] .game-image-placeholder {
+  background: linear-gradient(135deg, #2a2a3e 0%, #1a1a2e 100%);
+}
+
+[data-theme="dark"] .placeholder-content {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .placeholder-text {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .game-title {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .game-price {
+  color: #8b9eff;
+}
+
+
