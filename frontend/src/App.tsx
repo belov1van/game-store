@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './context/ThemeContext';
 import HomePage from './pages/Home/HomePage';
 import RegisterForm from './components/registration/RegisterForm';
 import LoginForm from './components/login/LoginForm';
@@ -7,15 +8,17 @@ import Profile from './pages/Profile/Profile';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/register" element={<RegisterForm />} />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/about" element={<AboutUs />} />
-        <Route path="/profile" element={<Profile />} />
-      </Routes>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/register" element={<RegisterForm />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
 }
 

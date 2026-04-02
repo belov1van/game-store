@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import ThemeToggle from '../ToggleTheme/ThemeToggle';
 import './Header.css';
 
 interface HeaderProps {
@@ -30,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
           onClick={handleLogoClick} 
           role="button" 
           tabIndex={0}
-          onKeyPress={(e) => {
+          onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               handleLogoClick();
             }
@@ -72,6 +73,8 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             />
           </div>
         </div>
+
+        <ThemeToggle />
         
         <Link to="/profile" className="user-profile-btn">
           <span>profile</span>
