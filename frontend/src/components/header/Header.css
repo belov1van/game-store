@@ -140,7 +140,6 @@
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
 }
 
-
 .logo {
   display: flex;
   align-items: center;
@@ -186,6 +185,62 @@
   color: #764ba2;
 }
 
+[data-theme="dark"] .home-header {
+  background: var(--header-bg);
+  box-shadow: 0 10px 30px var(--shadow-color);
+}
+
+[data-theme="dark"] .logo-text {
+  color: #8b9eff;
+}
+
+[data-theme="dark"] .logo:hover .logo-text {
+  color: #a5b3ff;
+}
+
+[data-theme="dark"] .nav-link {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .nav-link:hover {
+  color: #8b9eff;
+  background: var(--hover-bg);
+}
+
+[data-theme="dark"] .search-bar {
+  background: var(--bg-input);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .search-bar input {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .search-bar input::placeholder {
+  color: var(--placeholder-color);
+}
+
+[data-theme="dark"] .search-icon {
+  filter: brightness(0) invert(0.6);
+}
+
+[data-theme="dark"] .nav-icon {
+  filter: brightness(0) invert(0.7);
+}
+
+[data-theme="dark"] .nav-link:hover .nav-icon {
+  filter: brightness(0) invert(0.9);
+}
+
+[data-theme="dark"] .user-profile-btn {
+  background: linear-gradient(135deg, #5a4ac7 0%, #6a3a92 100%);
+  color: white;
+}
+
+[data-theme="dark"] .user-profile-btn:hover {
+  background: linear-gradient(135deg, #6a5ad7 0%, #7a4aa2 100%);
+  box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+}
 
 @media (max-width: 768px) {
   .home-header {
@@ -208,9 +263,17 @@
   .user-profile-btn span {
     display: none;
   }
-  
+
   .user-profile-btn {
     padding: 8px;
   }
-  
+}
+
+.dark-theme-icon {
+  filter: brightness(0) invert(1);
+  transition: filter 0.3s ease;
+}
+
+.login-icon {
+  transition: filter 0.3s ease;
 }
