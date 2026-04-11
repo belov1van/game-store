@@ -4,24 +4,12 @@ import Footer from "../../components/footer /Footer";
 import "./AboutUs.css";
 
 const AboutUs: React.FC = () => {
-  const teamMembers = [
+  const teamMember = [
     {
       name: "Belov Ivan",
       role: "Frontend",
       github: "https://github.com/belov1van",
       githubUsername: "belov1van"
-    },
-    {
-      name: "Oleg Babkin",
-      role: "BackEnd",
-      github: "https://github.com/NaronPNG",
-      githubUsername: "NaronPNG"
-    },
-    {
-      name: "Jibrail Gadadov",
-      role: "DevOps",
-      github: "https://github.com/Dzh1224",
-      githubUsername: "Dzh1224"
     },
   ];
 
@@ -77,9 +65,9 @@ const AboutUs: React.FC = () => {
         </section>
         
         <section className="team-section">
-          <h2 className="section-title">dev team</h2>
+          <h2 className="section-title">developer</h2>
           <div className="team-grid">
-            {teamMembers.map((member, index) => (
+            {teamMember.map((member, index) => (
               <a
                 key={index}
                 href={member.github}
@@ -96,27 +84,6 @@ const AboutUs: React.FC = () => {
                 </div>
               </a>
             ))}
-          </div>
-        </section>
-        
-        <section className="stats-section">
-          <div className="stats-grid">
-            <div className="stat-item">
-              <div className="stat-number">1000+</div>
-              <div className="stat-label">Games Available</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">50K+</div>
-              <div className="stat-label">Happy Gamers</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">24/7</div>
-              <div className="stat-label">Support</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">100%</div>
-              <div className="stat-label">Secure Payments</div>
-            </div>
           </div>
         </section>
       </main>
