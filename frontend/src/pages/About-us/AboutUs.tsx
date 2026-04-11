@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer /Footer";
-import "./AboutUs.css";
+import './AboutUs.css';
 
 const AboutUs: React.FC = () => {
   const teamMember = [
