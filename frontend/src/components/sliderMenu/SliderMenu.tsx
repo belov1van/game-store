@@ -8,7 +8,6 @@ interface SidebarMenuProps {
   onClose: () => void;
 }
 
-
 const SidebarMenu: React.FC<SidebarMenuProps> = ({ isOpen, onClose }) => {
   const [genres, setGenres] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -42,6 +41,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ isOpen, onClose }) => {
         </div>
 
         <div className="sidebar-content">
+          {/* ── Categories ───────────────────────────────── */}
           <div className="menu-section">
             <h3>Game Categories</h3>
 
