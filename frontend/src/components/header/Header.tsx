@@ -1,8 +1,9 @@
-import React, { useState } from 'react'; // Добавлен импорт useState
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { useCart } from '../../context/CartContext';
 import ThemeToggle from '../ToggleTheme/ThemeToggle';
+import SidebarMenu from '../sliderMenu/SliderMenu'; 
 import 'primeicons/primeicons.css';
 import './Header.css';
 import lightLogo from '../../assets/icons/game-controller-svgrepo-com (1).svg';
@@ -15,6 +16,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onSearch, onCartClick }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { theme } = useTheme();
   const { getTotalItems } = useCart();
@@ -22,82 +24,73 @@ const Header: React.FC<HeaderProps> = ({ onSearch, onCartClick }) => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
-    if (onSearch) {
-      onSearch(value);
-    }
+    if (onSearch) onSearch(value);
   };
 
-  const handleLogoClick = () => {
-    navigate('/');
-  };
+  const handleLogoClick = () => navigate('/');
 
   const logoSrc = theme === 'dark' ? darkLogo : lightLogo;
   const totalItems = getTotalItems();
 
   return (
-    <header className="home-header">
-      <div className="header-content">
-        <div 
-          className="logo" 
-          onClick={handleLogoClick} 
-          role="button" 
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              handleLogoClick();
-            }
-          }}
-        >
-          <div className="logo-icon">
-            <img src={logoSrc} alt="logo" className="login-icon"/>
+    <>
+      <header className="home-header">
+        <div className="header-content">
+          <div className="logo" onClick={handleLogoClick} role="button" tabIndex={0}>
+            <div className="logo-icon">
+              <img src={logoSrc} alt="logo" className="login-icon" />
+            </div>
+            <span className="logo-text">Gamestore</span>
           </div>
-          <span className="logo-text">Gamestore</span>
-        </div>
-        
-        <nav className="main-nav">
-          <Link to="/menu" className="nav-link">
-            <i className="pi pi-bars nav-icon"></i>
-            <span>menu</span>
-          </Link>
-          <Link to="/library" className="nav-link">
-            <i className="pi pi-book nav-icon"></i>
-            <span>library</span>
-          </Link>
-          <Link to="/about" className="nav-link">
-            <i className="pi pi-info-circle nav-icon"></i>
-            <span>about us</span>
-          </Link>
-          <Link to="/settings" className="nav-link">
-            <i className="pi pi-cog nav-icon"></i>
-            <span>settings</span>
-          </Link>
-        </nav>
 
-        <div className="search-section">
-          <div className="search-bar">
-            <i className="pi pi-search search-icon"></i>
-            <input
-              type="text"
-              placeholder="search game"
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
+          <nav className="main-nav">
+            <button 
+              className="nav-link menu-button" 
+              onClick={() => setIsMenuOpen(true)}
+              aria-label="Open Sidebar Menu"
+            >
+              <i className="pi pi-bars nav-icon"></i>
+              <span>Menu</span>
+            </button>
+            <Link to="/library" className="nav-link">
+              <i className="pi pi-book nav-icon"></i>
+              <span>Library</span>
+            </Link>
+            <Link to="/about" className="nav-link">
+              <i className="pi pi-info-circle nav-icon"></i>
+              <span>About Us</span>
+            </Link>
+            <Link to="/settings" className="nav-link">
+              <i className="pi pi-cog nav-icon"></i>
+              <span>Settings</span>
+            </Link>
+          </nav>
+
+          <div className="search-section">
+            <div className="search-bar">
+              <i className="pi pi-search search-icon"></i>
+              <input
+                type="text"
+                placeholder="Search Games"
+                value={searchTerm}
+                onChange={handleSearchChange}
+              />
+            </div>
           </div>
+
+          <ThemeToggle />
+          <button className="cart-btn" onClick={onCartClick}>
+            <i className="pi pi-shopping-cart cart-icon"></i>
+            {totalItems > 0 && <span className="cart-badge">{totalItems}</span>}
+          </button>
+          <Link to="/profile" className="user-profile-btn">
+            <i className="pi pi-user user-icon"></i>
+            <span>UserProfile</span>
+          </Link>
         </div>
-
-        <ThemeToggle />
-        
-        <button className="cart-btn" onClick={onCartClick}>
-          <i className="pi pi-shopping-cart cart-icon"></i>
-          {totalItems > 0 && <span className="cart-badge">{totalItems}</span>}
-        </button>
-
-        <Link to="/profile" className="user-profile-btn">
-          <i className="pi pi-user user-icon"></i>
-          <span>profile</span>
-        </Link>
-      </div>
-    </header>
+      </header>
+      <SidebarMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+    </>
   );
 };
 

@@ -364,3 +364,28 @@
 [data-theme="dark"] .search-icon {
   color: var(--text-secondary);
 }
+
+.menu-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 16px;
+}
+
+.menu-button:hover {
+  color: #667eea;
+  background: var(--hover-bg);
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: all 0.3s;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: transparent;
+}
