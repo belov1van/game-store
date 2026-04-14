@@ -1,5 +1,6 @@
 import type {
   AuthResponse,
+  AdminUser,
   Game,
   GamesResponse,
   Order,
@@ -84,6 +85,27 @@ export const api = {
       }),
 
     orders: () => request<Order[]>("/users/me/orders"),
+
+    uploadAvatar: (formData: FormData): Promise<{ avatarUrl: string }> => {
+      const token = localStorage.getItem("token");
+      const headers: Record<string, string> = {};
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+      return fetch("/api/users/me/avatar", {
+        method: "POST",
+        headers,
+        body: formData,
+      }).then(async (res) => {
+        if (!res.ok) {
+          const body = await res
+            .json()
+            .catch(() => ({ error: "Upload failed" }));
+          throw new Error(
+            (body as { error?: string }).error ?? "Upload failed",
+          );
+        }
+        return res.json() as Promise<{ avatarUrl: string }>;
+      });
+    },
   },
 
   orders: {
@@ -92,5 +114,47 @@ export const api = {
         method: "POST",
         body: JSON.stringify({ items }),
       }),
+  },
+
+  admin: {
+    // Users
+    getUsers: () => request<AdminUser[]>("/admin/users"),
+    createUser: (data: {
+      username: string;
+      email: string;
+      password: string;
+      role?: string;
+    }) =>
+      request<AdminUser>("/admin/users", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
+    updateUser: (
+      id: number,
+      data: { username?: string; email?: string; role?: string },
+    ) =>
+      request<AdminUser>(`/admin/users/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+      }),
+    deleteUser: (id: number) =>
+      request<{ success: boolean }>(`/admin/users/${id}`, { method: "DELETE" }),
+
+    getGames: () => request<Game[]>("/admin/games"),
+    createGame: (data: Omit<Game, "id" | "createdAt" | "updatedAt">) =>
+      request<Game>("/admin/games", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
+    updateGame: (
+      id: number,
+      data: Partial<Omit<Game, "id" | "createdAt" | "updatedAt">>,
+    ) =>
+      request<Game>(`/admin/games/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+      }),
+    deleteGame: (id: number) =>
+      request<{ success: boolean }>(`/admin/games/${id}`, { method: "DELETE" }),
   },
 };

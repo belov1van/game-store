@@ -1,7 +1,11 @@
+export type Role = "USER" | "ADMIN";
+
 export interface AuthUser {
   id: number;
   username: string;
   email: string;
+  role: Role;
+  avatar: string | null;
   createdAt: string;
 }
 
@@ -36,10 +40,21 @@ export interface UserProfile {
   id: number;
   username: string;
   email: string;
+  role: Role;
+  avatar: string | null;
   createdAt: string;
   updatedAt: string;
   gamesOwned: number;
   ordersCount: number;
+}
+
+export interface AdminUser {
+  id: number;
+  username: string;
+  email: string;
+  role: Role;
+  avatar: string | null;
+  createdAt: string;
 }
 
 export interface OrderItem {

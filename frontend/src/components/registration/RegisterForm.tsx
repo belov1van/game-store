@@ -74,8 +74,8 @@ const RegisterForm: React.FC = () => {
 
     if (!formData.password) {
       newErrors.password = "Пароль обязателен";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Пароль должен быть минимум 6 символов";
+    } else if (formData.password.length < 3) {
+      newErrors.password = "Пароль должен быть минимум 3 символов";
     }
 
     if (formData.password !== formData.repeatPassword) {

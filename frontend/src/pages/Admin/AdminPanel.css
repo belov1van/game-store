@@ -1,0 +1,337 @@
+.admin-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+}
+.admin-main {
+  flex: 1;
+  padding: 32px 24px;
+}
+
+.admin-panel {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.admin-panel-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-card);
+  padding: 4px;
+  border-radius: 10px;
+}
+.admin-tab-btn {
+  padding: 8px 20px;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.admin-tab-btn.active {
+  background: #667eea;
+  color: white;
+}
+.tab-count {
+  background: rgba(255, 255, 255, 0.25);
+  color: inherit;
+  border-radius: 10px;
+  padding: 1px 7px;
+  font-size: 12px;
+}
+
+.admin-table-wrapper {
+  background: var(--bg-card);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.admin-table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+.admin-table-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.admin-loading {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+.admin-scroll {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.admin-table th {
+  padding: 11px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+.admin-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.admin-table tbody tr:hover td {
+  background: var(--hover-bg);
+}
+.admin-id {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+.admin-muted {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.admin-avatar-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+.admin-avatar-placeholder {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #667eea22;
+  color: #667eea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+.admin-game-cover {
+  width: 48px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}
+
+.role-badge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.role-badge.admin {
+  background: #667eea22;
+  color: #667eea;
+}
+.role-badge.user {
+  background: var(--hover-bg);
+  color: var(--text-secondary);
+}
+
+.admin-actions {
+  display: flex;
+  gap: 6px;
+}
+.ap-edit-btn {
+  padding: 4px 12px;
+  background: #667eea18;
+  color: #667eea;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.ap-edit-btn:hover {
+  background: #667eea;
+  color: white;
+}
+.ap-delete-btn {
+  padding: 4px 12px;
+  background: #ff4d4f18;
+  color: #ff4d4f;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.ap-delete-btn:hover {
+  background: #ff4d4f;
+  color: white;
+}
+.ap-add-btn {
+  padding: 7px 16px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: opacity 0.15s;
+}
+.ap-add-btn:hover {
+  opacity: 0.85;
+}
+
+.ap-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.ap-modal-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 28px;
+  width: 440px;
+  max-width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.ap-modal-wide {
+  width: 620px;
+}
+.ap-modal-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 20px;
+  color: var(--text-primary);
+}
+
+.ap-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 14px;
+}
+.ap-field label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text-secondary);
+}
+.ap-field input,
+.ap-field select,
+.ap-field textarea {
+  padding: 9px 13px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: border-color 0.2s;
+  font-family: inherit;
+  resize: vertical;
+}
+.ap-field input:focus,
+.ap-field select:focus,
+.ap-field textarea:focus {
+  border-color: #667eea;
+  outline: none;
+}
+.ap-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+.ap-error {
+  color: #ff4d4f;
+  font-size: 13px;
+  margin: 0 0 12px;
+}
+.ap-modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+.ap-save-btn {
+  flex: 1;
+  padding: 10px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+.ap-save-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+.ap-save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.ap-cancel-btn {
+  padding: 10px 20px;
+  background: var(--hover-bg);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+@media (max-width: 640px) {
+  .admin-main {
+    padding: 16px 12px;
+  }
+  .ap-fields-grid {
+    grid-template-columns: 1fr;
+  }
+  .admin-panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

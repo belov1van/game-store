@@ -8,6 +8,7 @@ import RegisterForm from "./components/registration/RegisterForm";
 import LoginForm from "./components/login/LoginForm";
 import AboutUs from "./pages/About-us/AboutUs";
 import Profile from "./pages/Profile/Profile";
+import AdminPanel from "./pages/Admin/AdminPanel";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
               <Route path="/login" element={<LoginForm />} />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/admin" element={<AdminPanel />} />
             </Routes>
           </Router>
         </CartProvider>

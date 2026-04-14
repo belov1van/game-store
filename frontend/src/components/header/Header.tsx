@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useTheme } from '../../context/ThemeContext';
-import { useCart } from '../../context/CartContext';
-import ThemeToggle from '../ToggleTheme/ThemeToggle';
-import SidebarMenu from '../sliderMenu/SliderMenu'; 
-import 'primeicons/primeicons.css';
-import './Header.css';
-import lightLogo from '../../assets/icons/game-controller-svgrepo-com (1).svg';
-import darkLogo from '../../assets/icons/game-controller-svgrepo-com white.svg';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useTheme } from "../../context/ThemeContext";
+import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../context/AuthContext";
+import ThemeToggle from "../ToggleTheme/ThemeToggle";
+import SidebarMenu from "../sliderMenu/SliderMenu";
+import "primeicons/primeicons.css";
+import "./Header.css";
+import lightLogo from "../../assets/icons/game-controller-svgrepo-com (1).svg";
+import darkLogo from "../../assets/icons/game-controller-svgrepo-com white.svg";
 
 interface HeaderProps {
   onSearch?: (searchTerm: string) => void;
@@ -15,11 +16,12 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onSearch, onCartClick }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { theme } = useTheme();
   const { getTotalItems } = useCart();
+  const { isAdmin } = useAuth();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -27,16 +29,21 @@ const Header: React.FC<HeaderProps> = ({ onSearch, onCartClick }) => {
     if (onSearch) onSearch(value);
   };
 
-  const handleLogoClick = () => navigate('/');
+  const handleLogoClick = () => navigate("/");
 
-  const logoSrc = theme === 'dark' ? darkLogo : lightLogo;
+  const logoSrc = theme === "dark" ? darkLogo : lightLogo;
   const totalItems = getTotalItems();
 
   return (
     <>
       <header className="home-header">
         <div className="header-content">
-          <div className="logo" onClick={handleLogoClick} role="button" tabIndex={0}>
+          <div
+            className="logo"
+            onClick={handleLogoClick}
+            role="button"
+            tabIndex={0}
+          >
             <div className="logo-icon">
               <img src={logoSrc} alt="logo" className="login-icon" />
             </div>
@@ -44,8 +51,8 @@ const Header: React.FC<HeaderProps> = ({ onSearch, onCartClick }) => {
           </div>
 
           <nav className="main-nav">
-            <button 
-              className="nav-link menu-button" 
+            <button
+              className="nav-link menu-button"
               onClick={() => setIsMenuOpen(true)}
               aria-label="Open Sidebar Menu"
             >
@@ -64,6 +71,12 @@ const Header: React.FC<HeaderProps> = ({ onSearch, onCartClick }) => {
               <i className="pi pi-cog nav-icon"></i>
               <span>Settings</span>
             </Link>
+            {isAdmin && (
+              <Link to="/admin" className="nav-link">
+                <i className="pi pi-shield nav-icon"></i>
+                <span>admin</span>
+              </Link>
+            )}
           </nav>
 
           <div className="search-section">

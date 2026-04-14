@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from 'react';
-import { AuthContext } from './AuthContext';
-import { api } from '../api/api';
-import type { AuthUser } from '../api/types';
+import React, { useState, useCallback } from "react";
+import { AuthContext } from "./AuthContext";
+import { api } from "../api/api";
+import type { AuthUser } from "../api/types";
 
-const TOKEN_KEY = 'token';
-const USER_KEY = 'auth_user';
+const TOKEN_KEY = "token";
+const USER_KEY = "auth_user";
 
 function loadToken(): string | null {
   return localStorage.getItem(TOKEN_KEY);
@@ -19,7 +19,9 @@ function loadUser(): AuthUser | null {
   }
 }
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [token, setToken] = useState<string | null>(loadToken);
   const [user, setUser] = useState<AuthUser | null>(loadUser);
 
@@ -30,15 +32,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(newUser);
   }, []);
 
-  const login = useCallback(async (loginValue: string, password: string) => {
-    const data = await api.auth.login(loginValue, password);
-    persist(data.token, data.user);
-  }, [persist]);
+  const login = useCallback(
+    async (loginValue: string, password: string) => {
+      const data = await api.auth.login(loginValue, password);
+      persist(data.token, data.user);
+    },
+    [persist],
+  );
 
-  const register = useCallback(async (username: string, email: string, password: string) => {
-    const data = await api.auth.register(username, email, password);
-    persist(data.token, data.user);
-  }, [persist]);
+  const register = useCallback(
+    async (username: string, email: string, password: string) => {
+      const data = await api.auth.register(username, email, password);
+      persist(data.token, data.user);
+    },
+    [persist],
+  );
 
   const logout = useCallback(() => {
     localStorage.removeItem(TOKEN_KEY);
@@ -53,6 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user,
         token,
         isAuthenticated: token !== null,
+        isAdmin: user?.role === "ADMIN",
         login,
         register,
         logout,
