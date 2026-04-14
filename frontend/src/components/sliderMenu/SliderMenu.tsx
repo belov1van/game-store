@@ -1,67 +1,120 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './SliderMenu.css';
+import React, { useState, useEffect } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { api } from "../../api/api";
+import "./SliderMenu.css";
 
 interface SidebarMenuProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+
 const SidebarMenu: React.FC<SidebarMenuProps> = ({ isOpen, onClose }) => {
+  const [genres, setGenres] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+
+  const activeGenre = searchParams.get("genre") ?? "";
+
+  useEffect(() => {
+    if (!isOpen) return;
+    //setLoading(true);
+    //setError(null);
+    api.games
+      .genres()
+      .then(setGenres)
+      .catch(() => setError("Failed to load categories"))
+      .finally(() => setLoading(false));
+  }, [isOpen]);
+
   if (!isOpen) return null;
-
-  const categories = [
-    { id: 1, name: 'Action', path: '/category/action' },
-    { id: 2, name: 'RPG', path: '/category/rpg' },
-    { id: 3, name: 'Strategy', path: '/category/strategy' },
-    { id: 4, name: 'Sports', path: '/category/sports' },
-    { id: 5, name: 'Indie', path: '/category/indie' },
-    { id: 6, name: 'Racing', path: '/category/racing' },
-    { id: 7, name: 'Simulation', path: '/category/simulation' },
-    { id: 8, name: 'Horror', path: '/category/horror' },
-  ];
-
-  const popularTags = [
-    'New', 'Discounts', 'Popular', 'Coming Soon', 'Free'
-  ];
 
   return (
     <>
-      <div className="sidebar-overlay" onClick={onClose}></div>
+      <div className="sidebar-overlay" onClick={onClose} />
       <div className="sidebar-menu">
         <div className="sidebar-header">
           <h2>Menu</h2>
-          <button className="sidebar-close" onClick={onClose}>✕</button>
+          <button className="sidebar-close" onClick={onClose}>
+            ✕
+          </button>
         </div>
+
         <div className="sidebar-content">
           <div className="menu-section">
             <h3>Game Categories</h3>
-            <ul className="category-list">
-              {categories.map(cat => (
-                <li key={cat.id}>
-                  <Link to={cat.path} onClick={onClose}>
-                    <span>{cat.name}</span>
+
+            {loading && (
+              <p
+                style={{ padding: "8px 12px", opacity: 0.6, fontSize: "14px" }}
+              >
+                Loading…
+              </p>
+            )}
+
+            {error && (
+              <p
+                style={{ padding: "8px 12px", color: "red", fontSize: "14px" }}
+              >
+                {error}
+              </p>
+            )}
+
+            {!loading && !error && (
+              <ul className="category-list">
+                <li>
+                  <Link
+                    to="/"
+                    onClick={onClose}
+                    style={
+                      activeGenre === ""
+                        ? { color: "#667eea", fontWeight: 600 }
+                        : undefined
+                    }
+                  >
+                    <span>All games</span>
                   </Link>
                 </li>
-              ))}
-            </ul>
+
+                {genres.map((genre) => (
+                  <li key={genre}>
+                    <Link
+                      to={`/?genre=${encodeURIComponent(genre)}`}
+                      onClick={onClose}
+                      style={
+                        activeGenre === genre
+                          ? { color: "#667eea", fontWeight: 600 }
+                          : undefined
+                      }
+                    >
+                      <span className="cat-icon">{}</span>
+                      <span>{genre}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
-          <div className="menu-section">
-            <h3>Popular Tags</h3>
-            <div className="tags-list">
-              {popularTags.map((tag, idx) => (
-                <Link key={idx} to={`/tag/${tag.toLowerCase()}`} className="tag-item" onClick={onClose}>
-                  {tag}
-                </Link>
-              ))}
-            </div>
-          </div>
+
           <div className="menu-section">
             <h3>About</h3>
             <ul>
-              <li><Link to="/about" onClick={onClose}>About Us</Link></li>
-              <li><Link to="/support" onClick={onClose}>Support</Link></li>
-              <li><Link to="/faq" onClick={onClose}>FAQ</Link></li>
+              <li>
+                <Link to="/about" onClick={onClose}>
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/support" onClick={onClose}>
+                  Support
+                </Link>
+              </li>
+              <li>
+                <Link to="/faq" onClick={onClose}>
+                  FAQ
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

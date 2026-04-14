@@ -1,72 +1,103 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer /Footer";
+import { useAuth } from "../../context/AuthContext";
+import { api } from "../../api/api";
+import type { UserProfile, Order } from "../../api/types";
 import "./Profile.css";
 
-interface UserData {
-  username: string;
-  email: string;
-  avatar: string;
-  memberSince: string;
-  gamesOwned: number;
-  reviewsWritten: number;
-  wishlistCount: number;
-}
-
 const Profile: React.FC = () => {
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState<UserData>({
-    username: "gamer123",
-    email: "gamer@example.com",
-    avatar: "",
-    memberSince: "January 2024",
-    gamesOwned: 24,
-    reviewsWritten: 12,
-    wishlistCount: 8,
-  });
+  const [editForm, setEditForm] = useState({ username: "", email: "" });
+  const [saveError, setSaveError] = useState("");
 
-  const [editForm, setEditForm] = useState({
-    username: userData.username,
-    email: userData.email,
-  });
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+    void loadProfile();
+  }, [isAuthenticated]);
 
-  const handleSearch = (term: string) => {
-    console.log("Searching for:", term);
+  const loadProfile = async () => {
+    setLoading(true);
+    try {
+      const [profileData, ordersData] = await Promise.all([
+        api.users.me(),
+        api.users.orders(),
+      ]);
+      setProfile(profileData);
+      setOrders(ordersData);
+      setEditForm({ username: profileData.username, email: profileData.email });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
+  const handleEdit = () => setIsEditing(true);
 
-  const handleSave = () => {
-    setUserData({
-      ...userData,
-      username: editForm.username,
-      email: editForm.email,
-    });
-    setIsEditing(false);
+  const handleSave = async () => {
+    setSaveError("");
+    try {
+      const updated = await api.users.update(editForm);
+      setProfile((prev) => (prev ? { ...prev, ...updated } : updated));
+      setIsEditing(false);
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : "Update failed");
+    }
   };
 
   const handleCancel = () => {
-    setEditForm({
-      username: userData.username,
-      email: userData.email,
-    });
+    if (profile)
+      setEditForm({ username: profile.username, email: profile.email });
     setIsEditing(false);
+    setSaveError("");
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setEditForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setEditForm((prev) => ({ ...prev, [name]: value }));
   };
-  const purchasedGames = [
-    { id: 1, title: "Cyberpunk 2077", price: "1.5$" },
-    { id: 2, title: "The Witcher 3", price: "1.5$" },
-    { id: 3, title: "Elden Ring", price: "1.5$" },
-  ];
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
+  const handleSearch = (term: string) => {
+    console.log("Search:", term);
+  };
+
+  if (loading) {
+    return (
+      <div className="profile-container">
+        <Header onSearch={handleSearch} />
+        <main className="profile-main">
+          <div style={{ textAlign: "center", padding: "60px" }}>
+            Loading profile...
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!profile) return null;
+
+  const memberSince = new Date(profile.createdAt).toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
 
   return (
     <div className="profile-container">
@@ -76,21 +107,28 @@ const Profile: React.FC = () => {
         <div className="profile-content">
           <div className="profile-header">
             <div className="profile-avatar">
-              <div className="avatar-icon">{userData.avatar}</div>
+              <div className="avatar-icon">👤</div>
               <button className="change-avatar-btn">change avatar</button>
             </div>
 
             <div className="profile-info">
               {!isEditing ? (
                 <>
-                  <h1 className="profile-username">{userData.username}</h1>
-                  <p className="profile-email">{userData.email}</p>
-                  <p className="profile-member">
-                    member since {userData.memberSince}
-                  </p>
-                  <button className="edit-profile-btn" onClick={handleEdit}>
-                    edit profile
-                  </button>
+                  <h1 className="profile-username">{profile.username}</h1>
+                  <p className="profile-email">{profile.email}</p>
+                  <p className="profile-member">member since {memberSince}</p>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <button className="edit-profile-btn" onClick={handleEdit}>
+                      edit profile
+                    </button>
+                    <button
+                      className="edit-profile-btn"
+                      onClick={handleLogout}
+                      style={{ background: "transparent" }}
+                    >
+                      log out
+                    </button>
+                  </div>
                 </>
               ) : (
                 <div className="edit-form">
@@ -114,8 +152,18 @@ const Profile: React.FC = () => {
                       placeholder="Email"
                     />
                   </div>
+                  {saveError && (
+                    <p style={{ color: "red", fontSize: "14px" }}>
+                      {saveError}
+                    </p>
+                  )}
                   <div className="edit-actions">
-                    <button className="save-btn" onClick={handleSave}>
+                    <button
+                      className="save-btn"
+                      onClick={() => {
+                        void handleSave();
+                      }}
+                    >
                       save
                     </button>
                     <button className="cancel-btn" onClick={handleCancel}>
@@ -129,31 +177,42 @@ const Profile: React.FC = () => {
 
           <div className="stats-cards">
             <div className="stat-card">
-              <div className="stat-value">{userData.gamesOwned}</div>
+              <div className="stat-value">{profile.gamesOwned}</div>
               <div className="stat-label">games owned</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value">{userData.reviewsWritten}</div>
-              <div className="stat-label">reviews written</div>
+              <div className="stat-value">{profile.ordersCount}</div>
+              <div className="stat-label">orders</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value">{userData.wishlistCount}</div>
-              <div className="stat-label">wishlist</div>
+              <div className="stat-value">
+                {orders.reduce((sum, o) => sum + o.items.length, 0)}
+              </div>
+              <div className="stat-label">items bought</div>
             </div>
           </div>
 
           <div className="recent-games-section">
             <h2 className="section-title">purchased games</h2>
             <div className="recent-games-list">
-              {purchasedGames.map((game) => (
-                <div key={game.id} className="recent-game-card">
-                  <div className="game-details">
-                    <h3 className="game-title">{game.title}</h3>
-                    <p className="game-playtime">price: {game.price}</p>
+              {orders.length === 0 && (
+                <p style={{ padding: "16px", opacity: 0.6 }}>
+                  No purchases yet.
+                </p>
+              )}
+              {orders.flatMap((order) =>
+                order.items.map((item) => (
+                  <div key={item.id} className="recent-game-card">
+                    <div className="game-details">
+                      <h3 className="game-title">{item.game.title}</h3>
+                      <p className="game-playtime">
+                        ${item.price.toFixed(2)} × {item.quantity}
+                      </p>
+                    </div>
+                    <button className="details-btn">details</button>
                   </div>
-                  <button className="details-btn">details</button>
-                </div>
-              ))}
+                )),
+              )}
             </div>
           </div>
 

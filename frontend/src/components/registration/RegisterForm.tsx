@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import "./RegisterForm.css";
 import eyeOpenIcon from "../../assets/icons/eye-open.svg";
 import eyeClosedIcon from "../../assets/icons/eye-closed.svg";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 interface FormData {
   login: string;
@@ -17,6 +19,11 @@ interface PasswordVisibility {
 }
 
 const RegisterForm: React.FC = () => {
+  const navigate = useNavigate();
+  const { register } = useAuth();
+  const [apiError, setApiError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const [formData, setFormData] = useState<FormData>({
     login: "",
     mail: "",
@@ -79,13 +86,20 @@ const RegisterForm: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setApiError("");
 
-    if (validateForm()) {
-      console.log("Form submitted:", formData);
+    if (!validateForm()) return;
 
-      alert("Регистрация успешна! (demo)");
+    setIsLoading(true);
+    try {
+      await register(formData.login, formData.mail, formData.password);
+      navigate("/");
+    } catch (err) {
+      setApiError(err instanceof Error ? err.message : "Registration failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -101,7 +115,12 @@ const RegisterForm: React.FC = () => {
           <div className="gamestore-title">Gamestore</div>
         </div>
 
-        <form onSubmit={handleSubmit} className="register-form">
+        <form
+          onSubmit={(e) => {
+            void handleSubmit(e);
+          }}
+          className="register-form"
+        >
           <div className="form-group">
             <input
               type="text"
@@ -202,8 +221,13 @@ const RegisterForm: React.FC = () => {
             )}
           </div>
 
-          <button type="submit" className="submit-btn">
-            sing up
+          {apiError && (
+            <div className="error-message" style={{ marginBottom: "8px" }}>
+              {apiError}
+            </div>
+          )}
+          <button type="submit" className="submit-btn" disabled={isLoading}>
+            {isLoading ? "signing up..." : "sing up"}
           </button>
         </form>
 

@@ -1,9 +1,9 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext } from "react";
 
 export interface CartItem {
   id: number;
   title: string;
-  price: string;
+  price: number;
   image: string;
   quantity: number;
 }
@@ -18,12 +18,14 @@ export interface CartContextType {
   getTotalItems: () => number;
 }
 
-export const CartContext = createContext<CartContextType | undefined>(undefined);
+export const CartContext = createContext<CartContextType | undefined>(
+  undefined,
+);
 
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) {
-    throw new Error('useCart must be used within a CartProvider');
+    throw new Error("useCart must be used within a CartProvider");
   }
   return context;
 };

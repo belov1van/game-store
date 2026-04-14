@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import './LoginForm.css';
-import eyeOpenIcon from '../../assets/icons/eye-open.svg';
-import eyeClosedIcon from '../../assets/icons/eye-closed.svg';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import "./LoginForm.css";
+import eyeOpenIcon from "../../assets/icons/eye-open.svg";
+import eyeClosedIcon from "../../assets/icons/eye-closed.svg";
 
 interface LoginFormData {
   login: string;
@@ -11,66 +13,88 @@ interface LoginFormData {
 
 const LoginForm: React.FC = () => {
   const [formData, setFormData] = useState<LoginFormData>({
-    login: '',
-    password: '',
+    login: "",
+    password: "",
   });
 
   const [errors, setErrors] = useState<Partial<LoginFormData>>({});
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const [apiError, setApiError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
     if (errors[name as keyof LoginFormData]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: undefined
+        [name]: undefined,
       }));
     }
   };
 
   const togglePasswordVisibility = () => {
-    setShowPassword(prev => !prev);
+    setShowPassword((prev) => !prev);
   };
 
   const validateForm = (): boolean => {
     const newErrors: Partial<LoginFormData> = {};
 
     if (!formData.login.trim()) {
-      newErrors.login = 'Логин обязателен';
+      newErrors.login = "Логин обязателен";
     }
 
     if (!formData.password) {
-      newErrors.password = 'Пароль обязателен';
+      newErrors.password = "Пароль обязателен";
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Пароль должен быть минимум 6 символов';
+      newErrors.password = "Пароль должен быть минимум 6 символов";
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (validateForm()) {
-      console.log('Login form submitted:', formData);
-      alert('Вход выполнен успешно! (demo)');
+    setApiError("");
+
+    if (!validateForm()) return;
+
+    setIsLoading(true);
+    try {
+      await login(formData.login, formData.password);
+      navigate("/");
+    } catch (err) {
+      setApiError(err instanceof Error ? err.message : "Login failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="login-container">
       <div className="login-card">
-        <div className='login-icon-container'>
-          <img src="../src/assets/icons/game-controller-svgrepo-com (1).svg" alt="" className='login-icon'/>
+        <div className="login-icon-container">
+          <img
+            src="../src/assets/icons/game-controller-svgrepo-com (1).svg"
+            alt=""
+            className="login-icon"
+          />
           <div className="gamestore-title">Gamestore</div>
         </div>
-        
-        <form onSubmit={handleSubmit} className="login-form">
+
+        <form
+          onSubmit={(e) => {
+            void handleSubmit(e);
+          }}
+          className="login-form"
+        >
           <div className="form-group">
             <input
               type="text"
@@ -78,36 +102,40 @@ const LoginForm: React.FC = () => {
               placeholder="login"
               value={formData.login}
               onChange={handleChange}
-              className={errors.login ? 'error' : ''}
+              className={errors.login ? "error" : ""}
             />
-            {errors.login && <span className="error-message">{errors.login}</span>}
+            {errors.login && (
+              <span className="error-message">{errors.login}</span>
+            )}
           </div>
 
           <div className="form-group password-group">
             <div className="password-input-wrapper">
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="password"
                 value={formData.password}
                 onChange={handleChange}
-                className={errors.password ? 'error' : ''}
+                className={errors.password ? "error" : ""}
               />
               <button
                 type="button"
                 className="toggle-password"
                 onClick={togglePasswordVisibility}
-                aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
+                aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
               >
-                <img 
-                  src={showPassword ? eyeOpenIcon : eyeClosedIcon} 
-                  alt={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
+                <img
+                  src={showPassword ? eyeOpenIcon : eyeClosedIcon}
+                  alt={showPassword ? "Скрыть пароль" : "Показать пароль"}
                   width="20"
                   height="20"
                 />
               </button>
             </div>
-            {errors.password && <span className="error-message">{errors.password}</span>}
+            {errors.password && (
+              <span className="error-message">{errors.password}</span>
+            )}
           </div>
 
           <div className="form-options">
@@ -119,8 +147,13 @@ const LoginForm: React.FC = () => {
             </Link>
           </div>
 
-          <button type="submit" className="submit-btn">
-            log in
+          {apiError && (
+            <div className="error-message" style={{ marginBottom: "8px" }}>
+              {apiError}
+            </div>
+          )}
+          <button type="submit" className="submit-btn" disabled={isLoading}>
+            {isLoading ? "logging in..." : "log in"}
           </button>
         </form>
 

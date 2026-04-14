@@ -1,48 +1,64 @@
-import React, { useState } from 'react';
-import Header from '../../components/header/Header';
-import Footer from '../../components/footer /Footer';
-import GameModal from '../../components/gameModal/GameModal';
-import Cart from '../../components/cart/Cart';
-import { useCart } from '../../context/CartContext';
-import './Home.css';
-
-interface Game {
-  id: number;
-  title: string;
-  image: string;
-  price: string;
-  rating: number;
-  description: string;
-  genre: string;
-  releaseDate: string;
-  developer: string;
-}
+import React, { useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
+import Header from "../../components/header/Header";
+import Footer from "../../components/footer /Footer";
+import GameModal from "../../components/gameModal/GameModal";
+import Cart from "../../components/cart/Cart";
+import { useCart } from "../../context/CartContext";
+import { api } from "../../api/api";
+import type { Game } from "../../api/types";
+import "./Home.css";
 
 const HomePage: React.FC = () => {
+  const [games, setGames] = useState<Game[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const activeGenre = searchParams.get("genre") ?? "";
+
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
   const { addToCart } = useCart();
 
-  const emptyGames = Array(24).fill(null);
+  const fetchGames = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await api.games.list({
+        search: search || undefined,
+        genre: activeGenre || undefined,
+        page,
+        limit: 12,
+      });
+      setGames(data.games);
+      setTotalPages(data.totalPages);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load games");
+    } finally {
+      setLoading(false);
+    }
+  }, [search, page, activeGenre]);
+
+  useEffect(() => {
+    void fetchGames();
+  }, [fetchGames]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [search, activeGenre]);
 
   const handleSearch = (term: string) => {
-    console.log('Searching for:', term);
+    setSearch(term);
   };
 
-  const handleBuyClick = (index: number) => {
-    const tempGame: Game = {
-      id: index,
-      title: `Game ${index + 1}`,
-      image: 'https://via.placeholder.com/300x400?text=Game',
-      price: '$59.99',
-      rating: 0,
-      description: 'Game description will be available soon. Stay tuned for updates!',
-      genre: 'TBA',
-      releaseDate: 'Coming Soon',
-      developer: 'TBA'
-    };
-    setSelectedGame(tempGame);
+  const handleGameClick = (game: Game) => {
+    setSelectedGame(game);
     setIsModalOpen(true);
   };
 
@@ -58,9 +74,8 @@ const HomePage: React.FC = () => {
         title: selectedGame.title,
         price: selectedGame.price,
         image: selectedGame.image,
-        quantity: 1
+        quantity: 1,
       });
-      alert(`${selectedGame.title} added to cart!`);
       setIsModalOpen(false);
       setSelectedGame(null);
     }
@@ -69,29 +84,100 @@ const HomePage: React.FC = () => {
   return (
     <div className="home-container">
       <Header onSearch={handleSearch} onCartClick={() => setIsCartOpen(true)} />
-      
+
       <main className="home-main">
-        <div className="games-grid">
-          {emptyGames.map((_, index) => (
-            <div key={index} className="game-card">
-              <div className="game-image-placeholder">
-                <div className="placeholder-content">
-                  <div className="placeholder-text">Game {index + 1}</div>
+        {activeGenre && (
+          <div
+            style={{ padding: "16px 24px 0", fontSize: "14px", opacity: 0.6 }}
+          >
+            Genre: <strong>{activeGenre}</strong>
+          </div>
+        )}
+        {loading && (
+          <div
+            style={{ textAlign: "center", padding: "60px", fontSize: "18px" }}
+          >
+            Loading games...
+          </div>
+        )}
+
+        {error && (
+          <div style={{ textAlign: "center", padding: "60px", color: "red" }}>
+            {error}
+          </div>
+        )}
+
+        {!loading && !error && games.length === 0 && (
+          <div style={{ textAlign: "center", padding: "60px" }}>
+            No games found.
+          </div>
+        )}
+
+        {!loading && !error && games.length > 0 && (
+          <>
+            <div className="games-grid">
+              {games.map((game) => (
+                <div key={game.id} className="game-card">
+                  <div className="game-image-placeholder">
+                    <img
+                      src={game.image}
+                      alt={game.title}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = "none";
+                      }}
+                    />
+                  </div>
+                  <div className="game-info">
+                    <h3 className="game-title-placeholder">{game.title}</h3>
+                    <div className="game-price-placeholder">
+                      ${game.price.toFixed(2)}
+                    </div>
+                    <button
+                      className="buy-btn"
+                      onClick={() => handleGameClick(game)}
+                    >
+                      buy now
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <div className="game-info">
-                <h3 className="game-title-placeholder">Game Title</h3>
-                <div className="game-price-placeholder">$59.99</div>
-                <button 
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "12px",
+                  padding: "24px",
+                }}
+              >
+                <button
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
                   className="buy-btn"
-                  onClick={() => handleBuyClick(index)}
                 >
-                  buy now
+                  ← prev
+                </button>
+                <span style={{ alignSelf: "center" }}>
+                  {page} / {totalPages}
+                </span>
+                <button
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  className="buy-btn"
+                >
+                  next →
                 </button>
               </div>
-            </div>
-          ))}
-        </div>
+            )}
+          </>
+        )}
       </main>
 
       <Footer />

@@ -1,6 +1,8 @@
-import { useCart } from '../../context/CartContext';
-import 'primeicons/primeicons.css';
-import './Cart.css';
+import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../context/AuthContext";
+import { api } from "../../api/api";
+import "primeicons/primeicons.css";
+import "./Cart.css";
 
 interface CartProps {
   isOpen: boolean;
@@ -8,7 +10,15 @@ interface CartProps {
 }
 
 const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
-  const { cartItems, removeFromCart, updateQuantity, clearCart, getTotalPrice, getTotalItems } = useCart();
+  const {
+    cartItems,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    getTotalPrice,
+    getTotalItems,
+  } = useCart();
+  const { isAuthenticated } = useAuth();
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -16,14 +26,29 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (cartItems.length === 0) {
-      alert('Your cart is empty!');
+      alert("Your cart is empty!");
       return;
     }
-    alert(`Total: $${getTotalPrice().toFixed(2)}\nThank you for your purchase!`);
-    clearCart();
-    onClose();
+
+    if (!isAuthenticated) {
+      alert("Please log in to checkout.");
+      return;
+    }
+
+    try {
+      await api.orders.create(
+        cartItems.map((item) => ({ gameId: item.id, quantity: item.quantity })),
+      );
+      alert(`Order placed! Total: $${getTotalPrice().toFixed(2)}`);
+      clearCart();
+      onClose();
+    } catch (err) {
+      alert(
+        `Checkout failed: ${err instanceof Error ? err.message : "Unknown error"}`,
+      );
+    }
   };
 
   if (!isOpen) return null;
@@ -33,7 +58,10 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
       <div className="cart-container">
         <div className="cart-header">
           <h2 className="cart-title">
-            <i className="pi pi-shopping-cart" style={{ marginRight: '10px' }}></i>
+            <i
+              className="pi pi-shopping-cart"
+              style={{ marginRight: "10px" }}
+            ></i>
             shopping cart
           </h2>
           <button className="cart-close" onClick={onClose}>
@@ -45,20 +73,25 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
           {cartItems.length === 0 ? (
             <div className="cart-empty">
               <div className="empty-cart-icon">
-                <i className="pi pi-shopping-cart" style={{ fontSize: '80px' }}></i>
+                <i
+                  className="pi pi-shopping-cart"
+                  style={{ fontSize: "80px" }}
+                ></i>
               </div>
               <p>Your cart is empty</p>
             </div>
           ) : (
             <>
-              {cartItems.map(item => (
+              {cartItems.map((item) => (
                 <div key={item.id} className="cart-item">
                   <div className="cart-item-image">
                     <img src={item.image} alt={item.title} />
                   </div>
                   <div className="cart-item-details">
                     <h3 className="cart-item-title">{item.title}</h3>
-                    <div className="cart-item-price">{item.price}</div>
+                    <div className="cart-item-price">
+                      ${item.price.toFixed(2)}
+                    </div>
                   </div>
                   <div className="cart-item-quantity">
                     <button
@@ -76,7 +109,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
                     </button>
                   </div>
                   <div className="cart-item-total">
-                    ${(parseFloat(item.price.replace('$', '')) * item.quantity).toFixed(2)}
+                    ${(item.price * item.quantity).toFixed(2)}
                   </div>
                   <button
                     className="cart-item-remove"
@@ -98,11 +131,16 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
             </div>
             <div className="cart-actions">
               <button className="clear-cart-btn" onClick={clearCart}>
-                <i className="pi pi-trash" style={{ marginRight: '8px' }}></i>
+                <i className="pi pi-trash" style={{ marginRight: "8px" }}></i>
                 clear cart
               </button>
-              <button className="checkout-btn" onClick={handleCheckout}>
-                <i className="pi pi-check" style={{ marginRight: '8px' }}></i>
+              <button
+                className="checkout-btn"
+                onClick={() => {
+                  void handleCheckout();
+                }}
+              >
+                <i className="pi pi-check" style={{ marginRight: "8px" }}></i>
                 checkout ({getTotalItems()} items)
               </button>
             </div>
