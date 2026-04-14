@@ -148,7 +148,7 @@ async function main() {
     await prisma.game.createMany({ data: games });
     console.log(`Seeded ${games.length} games.`);
   }
-  if ((count = games.length)) {
+  if (count === games.length) {
     console.log(`DB already has ${count} games, skipping seed.`);
   }
 }
