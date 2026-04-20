@@ -12,6 +12,7 @@ export interface AuthContextType {
     email: string,
     password: string,
   ) => Promise<void>;
+  updateUser: (patch: Partial<AuthUser>) => void;
   logout: () => void;
 }
 

@@ -21,7 +21,7 @@ const Header: React.FC<HeaderProps> = ({ onSearch, onCartClick }) => {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const { getTotalItems } = useCart();
-  const { isAdmin } = useAuth();
+  const { isAdmin, user } = useAuth();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -97,7 +97,20 @@ const Header: React.FC<HeaderProps> = ({ onSearch, onCartClick }) => {
             {totalItems > 0 && <span className="cart-badge">{totalItems}</span>}
           </button>
           <Link to="/profile" className="user-profile-btn">
-            <i className="pi pi-user user-icon"></i>
+            {user?.avatar ? (
+              <img
+                src={user.avatar}
+                alt="avatar"
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+            ) : (
+              <i className="pi pi-user user-icon"></i>
+            )}
             <span>UserProfile</span>
           </Link>
         </div>

@@ -106,6 +106,25 @@ export const api = {
         return res.json() as Promise<{ avatarUrl: string }>;
       });
     },
+    deleteAvatar: (): Promise<{ avatarUrl: string | null }> => {
+      const token = localStorage.getItem("token");
+      const headers: Record<string, string> = {};
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+      return fetch("/api/users/me/avatar", {
+        method: "DELETE",
+        headers,
+      }).then(async (res) => {
+        if (!res.ok) {
+          const body = await res
+            .json()
+            .catch(() => ({ error: "Delete failed" }));
+          throw new Error(
+            (body as { error?: string }).error ?? "Delete failed",
+          );
+        }
+        return res.json() as Promise<{ avatarUrl: string | null }>;
+      });
+    },
   },
 
   orders: {

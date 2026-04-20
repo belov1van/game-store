@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import multer from "multer";
 import path from "path";
+import fs from "fs";
 import prisma from "../prisma/client";
 import { authenticate } from "../middleware/auth";
 
@@ -110,7 +111,25 @@ router.post(
         res.status(400).json({ error: "No file provided" });
         return;
       }
-      const avatarUrl = `/api/uploads/${req.file.filename}`;
+      const newFilename = req.file.filename;
+      const avatarUrl = `/api/uploads/${newFilename}`;
+      const existing = await prisma.user.findUnique({
+        where: { id: req.userId },
+        select: { avatar: true },
+      });
+
+      if (existing?.avatar) {
+        const oldName = path.basename(existing.avatar);
+        const oldPath = path.join(process.cwd(), "uploads", oldName);
+        try {
+          if (fs.existsSync(oldPath)) {
+            fs.unlinkSync(oldPath);
+          }
+        } catch (err) {
+          console.error("Failed to delete old avatar file:", err);
+        }
+      }
+
       const user = await prisma.user.update({
         where: { id: req.userId },
         data: { avatar: avatarUrl },
@@ -123,6 +142,38 @@ router.post(
     }
   },
 );
+
+// DELETE /api/users/me/avatar
+router.delete("/me/avatar", async (req: Request, res: Response) => {
+  try {
+    const existing = await prisma.user.findUnique({
+      where: { id: req.userId },
+      select: { avatar: true },
+    });
+
+    if (existing?.avatar) {
+      const oldName = path.basename(existing.avatar);
+      const oldPath = path.join(process.cwd(), "uploads", oldName);
+      try {
+        if (fs.existsSync(oldPath)) {
+          fs.unlinkSync(oldPath);
+        }
+      } catch (err) {
+        console.error("Failed to delete avatar file:", err);
+      }
+    }
+
+    await prisma.user.update({
+      where: { id: req.userId },
+      data: { avatar: null },
+    });
+
+    res.json({ avatarUrl: null });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 // GET /api/users/me/orders
 router.get("/me/orders", async (req: Request, res: Response) => {

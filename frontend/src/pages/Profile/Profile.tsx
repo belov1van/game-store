@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer /Footer";
@@ -8,7 +8,7 @@ import type { UserProfile, Order } from "../../api/types";
 import "./Profile.css";
 
 const Profile: React.FC = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, updateUser } = useAuth();
   const navigate = useNavigate();
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -18,6 +18,9 @@ const Profile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({ username: "", email: "" });
   const [saveError, setSaveError] = useState("");
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarError, setAvatarError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -25,7 +28,7 @@ const Profile: React.FC = () => {
       return;
     }
     void loadProfile();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, navigate]);
 
   const loadProfile = async () => {
     setLoading(true);
@@ -78,6 +81,55 @@ const Profile: React.FC = () => {
     console.log("Search:", term);
   };
 
+  const handleAvatarClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      setAvatarError("");
+      const file = e.target.files?.[0];
+      if (!file) return;
+      if (!file.type.startsWith("image/")) {
+        setAvatarError("Please select an image file");
+        e.target.value = "";
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) {
+        setAvatarError("Max size is 2MB");
+        e.target.value = "";
+        return;
+      }
+      setAvatarUploading(true);
+      const formData = new FormData();
+      formData.append("avatar", file);
+      const { avatarUrl } = await api.users.uploadAvatar(formData);
+      setProfile((prev) => (prev ? { ...prev, avatar: avatarUrl } : prev));
+      updateUser({ avatar: avatarUrl });
+    } catch (err) {
+      setAvatarError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setAvatarUploading(false);
+      if (e.target) e.target.value = "";
+    }
+  };
+
+  const handleDeleteAvatar = async () => {
+    try {
+      setAvatarError("");
+      setAvatarUploading(true);
+      const { avatarUrl } = await api.users.deleteAvatar();
+      setProfile((prev) => (prev ? { ...prev, avatar: avatarUrl } : prev));
+      updateUser({ avatar: avatarUrl });
+    } catch (err) {
+      setAvatarError(err instanceof Error ? err.message : "Delete failed");
+    } finally {
+      setAvatarUploading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="profile-container">
@@ -107,8 +159,58 @@ const Profile: React.FC = () => {
         <div className="profile-content">
           <div className="profile-header">
             <div className="profile-avatar">
-              <div className="avatar-icon">👤</div>
-              <button className="change-avatar-btn">change avatar</button>
+              {profile.avatar ? (
+                <img
+                  src={profile.avatar}
+                  alt="avatar"
+                  style={{
+                    width: 120,
+                    height: 120,
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    boxShadow: "0 5px 15px var(--shadow-color)",
+                  }}
+                />
+              ) : (
+                <div className="avatar-icon">👤</div>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={(e) => {
+                  void handleAvatarChange(e);
+                }}
+              />
+              <div style={{ display: "flex", gap: "8px" }}>
+                <button
+                  className="change-avatar-btn"
+                  onClick={handleAvatarClick}
+                  disabled={avatarUploading}
+                >
+                  {avatarUploading
+                    ? "uploading..."
+                    : profile.avatar
+                      ? "change avatar"
+                      : "add avatar"}
+                </button>
+                {profile.avatar && (
+                  <button
+                    className="change-avatar-btn"
+                    onClick={() => {
+                      void handleDeleteAvatar();
+                    }}
+                    disabled={avatarUploading}
+                    style={{ borderColor: "#ff4d4f", color: "#ff4d4f" }}
+                  >
+                    delete
+                  </button>
+                )}
+              </div>
+              {avatarError && (
+                <p style={{ color: "red", fontSize: "12px" }}>{avatarError}</p>
+              )}
             </div>
 
             <div className="profile-info">
