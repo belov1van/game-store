@@ -117,29 +117,31 @@ const HomePage: React.FC = () => {
           <>
             <div className="games-grid">
               {games.map((game) => (
-                <div key={game.id} className="game-card">
-                  <div className="game-image-placeholder">
+                <div
+                  key={game.id}
+                  className="game-card"
+                  onClick={() => handleGameClick(game)}
+                >
+                  <div className="game-image-wrapper">
                     <img
                       src={game.image}
                       alt={game.title}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
+                      className="game-image"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = "none";
+                        (e.target as HTMLImageElement).src =
+                          "https://placehold.co/600x400?text=No+Image";
                       }}
                     />
                   </div>
                   <div className="game-info">
-                    <h3 className="game-title-placeholder">{game.title}</h3>
-                    <div className="game-price-placeholder">
-                      ${game.price.toFixed(2)}
-                    </div>
+                    <h3 className="game-title">{game.title}</h3>
+                    <div className="game-price">${game.price.toFixed(2)}</div>
                     <button
                       className="buy-btn"
-                      onClick={() => handleGameClick(game)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleGameClick(game);
+                      }}
                     >
                       buy now
                     </button>
@@ -149,14 +151,7 @@ const HomePage: React.FC = () => {
             </div>
 
             {totalPages > 1 && (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: "12px",
-                  padding: "24px",
-                }}
-              >
+              <div className="pagination">
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
@@ -164,7 +159,7 @@ const HomePage: React.FC = () => {
                 >
                   ← prev
                 </button>
-                <span style={{ alignSelf: "center" }}>
+                <span>
                   {page} / {totalPages}
                 </span>
                 <button

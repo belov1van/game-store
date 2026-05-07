@@ -9,6 +9,7 @@ import LoginForm from "./components/login/LoginForm";
 import AboutUs from "./pages/About-us/AboutUs";
 import Profile from "./pages/Profile/Profile";
 import AdminPanel from "./pages/Admin/AdminPanel";
+import Library from "./pages/Library/Library";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
               <Route path="/login" element={<LoginForm />} />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/library" element={<Library />} />
               <Route path="/admin" element={<AdminPanel />} />
             </Routes>
           </Router>

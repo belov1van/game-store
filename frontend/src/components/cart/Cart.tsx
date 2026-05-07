@@ -41,7 +41,9 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
       await api.orders.create(
         cartItems.map((item) => ({ gameId: item.id, quantity: item.quantity })),
       );
-      alert(`Order placed! Total: $${getTotalPrice().toFixed(2)}`);
+      alert(
+        `Order placed! Total: $${getTotalPrice().toFixed(2)}\n\nYou can view your game keys in Profile → purchased games → press "details".`,
+      );
       clearCart();
       onClose();
     } catch (err) {
@@ -84,8 +86,15 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
             <>
               {cartItems.map((item) => (
                 <div key={item.id} className="cart-item">
-                  <div className="cart-item-image">
-                    <img src={item.image} alt={item.title} />
+                  <div className="cart-item-image-wrapper">
+                    <img 
+                      src={item.image} 
+                      alt={item.title} 
+                      className="cart-item-image"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://placehold.co/100x100?text=No+Image';
+                      }}
+                    />
                   </div>
                   <div className="cart-item-details">
                     <h3 className="cart-item-title">{item.title}</h3>

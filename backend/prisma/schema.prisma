@@ -57,4 +57,5 @@ model OrderItem {
   game     Game  @relation(fields: [gameId], references: [id])
   quantity Int
   price    Float
+  code     String @unique @default(uuid())
 }

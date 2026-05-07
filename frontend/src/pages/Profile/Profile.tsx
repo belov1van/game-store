@@ -21,6 +21,7 @@ const Profile: React.FC = () => {
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [avatarError, setAvatarError] = useState("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [openCodeItemId, setOpenCodeItemId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -311,7 +312,32 @@ const Profile: React.FC = () => {
                         ${item.price.toFixed(2)} × {item.quantity}
                       </p>
                     </div>
-                    <button className="details-btn">details</button>
+                    <button
+                      className="details-btn"
+                      onClick={() => {
+                        setOpenCodeItemId(
+                          openCodeItemId === item.id ? null : item.id,
+                        );
+                      }}
+                    >
+                      details
+                    </button>
+                    {openCodeItemId === item.id && (
+                      <div
+                        className="purchase-code"
+                        style={{
+                          marginTop: 8,
+                          padding: "8px 12px",
+                          borderRadius: 8,
+                          background: "var(--hover-bg)",
+                          fontFamily: "monospace",
+                          fontSize: 14,
+                          color: "var(--text-primary)",
+                        }}
+                      >
+                        code: {item.code}
+                      </div>
+                    )}
                   </div>
                 )),
               )}
