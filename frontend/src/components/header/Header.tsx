@@ -67,10 +67,6 @@ const Header: React.FC<HeaderProps> = ({ onSearch, onCartClick }) => {
               <i className="pi pi-info-circle nav-icon"></i>
               <span>About Us</span>
             </Link>
-            <Link to="/settings" className="nav-link">
-              <i className="pi pi-cog nav-icon"></i>
-              <span>Settings</span>
-            </Link>
             {isAdmin && (
               <Link to="/admin" className="nav-link">
                 <i className="pi pi-shield nav-icon"></i>

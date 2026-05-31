@@ -155,17 +155,17 @@ const HomePage: React.FC = () => {
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="buy-btn"
+                  className="pagination-btn"
                 >
                   ← prev
                 </button>
-                <span>
+                <span className="pagination-info">
                   {page} / {totalPages}
                 </span>
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="buy-btn"
+                  className="pagination-btn"
                 >
                   next →
                 </button>
