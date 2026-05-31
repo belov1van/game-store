@@ -71,7 +71,7 @@
   left: -3px;
   width: 27px;
   height: 27px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #667eea;
   border-radius: 50%;
   transition: transform 0.3s ease, background 0.3s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
@@ -79,11 +79,11 @@
 }
 
 [data-theme="light"] .theme-toggle-thumb {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #667eea;
 }
 
 [data-theme="dark"] .theme-toggle-thumb {
-  background: linear-gradient(135deg, #8b9eff 0%, #a855f7 100%);
+  background: #8b9eff;
 }
 
 .theme-toggle-thumb.dark {

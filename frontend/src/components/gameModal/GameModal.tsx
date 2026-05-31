@@ -47,15 +47,6 @@ const GameModal: React.FC<GameModalProps> = ({
         <div className="modal-body">
           <div className="modal-image">
             <img src={game.image} alt={game.title} />
-            {game.rating > 0 && (
-              <div className="modal-rating">
-                <i
-                  className="pi pi-star-fill"
-                  style={{ fontSize: "12px", marginRight: "5px" }}
-                ></i>
-                {game.rating}
-              </div>
-            )}
           </div>
 
           <div className="modal-info">
@@ -78,10 +69,7 @@ const GameModal: React.FC<GameModalProps> = ({
               </div>
               <div className="detail-item">
                 <span className="detail-label">
-                  <i
-                    className="pi pi-calendar"
-                    style={{ marginRight: "8px" }}
-                  ></i>
+                  <i className="pi pi-calendar" style={{ marginRight: "8px" }}></i>
                   Release Date:
                 </span>
                 <span className="detail-value">{game.releaseDate}</span>
@@ -91,12 +79,13 @@ const GameModal: React.FC<GameModalProps> = ({
             <p className="modal-description">{game.description}</p>
 
             <div className="modal-footer">
+              <div className="modal-rating">
+                <i className="pi pi-star-fill" style={{ fontSize: "14px", marginRight: "5px" }}></i>
+                {game.rating.toFixed(1)}
+              </div>
               <div className="modal-price">${game.price.toFixed(2)}</div>
               <button className="modal-buy-btn" onClick={handleBuyClick}>
-                <i
-                  className="pi pi-shopping-cart"
-                  style={{ marginRight: "8px" }}
-                ></i>
+                <i className="pi pi-shopping-cart" style={{ marginRight: "8px" }}></i>
                 buy now
               </button>
             </div>

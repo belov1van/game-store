@@ -45,7 +45,7 @@
 .avatar-icon {
   width: 120px;
   height: 120px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #667eea; 
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -98,7 +98,7 @@
 
 .edit-profile-btn {
   padding: 10px 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #667eea;
   color: white;
   border: none;
   border-radius: 10px;
@@ -164,7 +164,7 @@
 }
 
 .save-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #667eea;
   color: white;
 }
 
@@ -186,7 +186,7 @@
 }
 
 .stat-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #667eea;
   border-radius: 15px;
   padding: 25px;
   text-align: center;
@@ -264,7 +264,7 @@
 
 .details-btn {
   padding: 10px 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #667eea;
   color: white;
   border: none;
   border-radius: 10px;
@@ -379,11 +379,11 @@
 }
 
 [data-theme="dark"] .details-btn {
-  background: linear-gradient(135deg, #5a4ac7 0%, #6a3a92 100%);
+  background: #5a4ac7;
 }
 
 [data-theme="dark"] .details-btn:hover {
-  background: linear-gradient(135deg, #6a5ad7 0%, #7a4aa2 100%);
+  background: #6a5ad7;
 }
 
 /* Адаптивность */

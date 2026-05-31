@@ -139,7 +139,7 @@
 
 .search-btn {
   padding: 10px 15px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #667eea;
   border: none;
   border-radius: 10px;
   color: white;
@@ -309,11 +309,11 @@
 }
 
 [data-theme="dark"] .search-btn {
-  background: linear-gradient(135deg, #5a4ac7 0%, #6a3a92 100%);
+  background: #5a4ac7;
 }
 
 [data-theme="dark"] .search-btn:hover {
-  background: linear-gradient(135deg, #6a5ad7 0%, #7a4aa2 100%);
+  background: #6a5ad7;
 }
 
 [data-theme="dark"] .copyright {
