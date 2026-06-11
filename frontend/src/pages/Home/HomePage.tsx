@@ -88,7 +88,7 @@ const HomePage: React.FC = () => {
       <main className="home-main">
         {activeGenre && (
           <div
-            style={{ padding: "16px 24px 0", fontSize: "14px", opacity: 0.6 }}
+            style={{display: "flex", justifyContent: "center", alignItems: "center", alignContent: "center", padding: "16px 24px 0", fontSize: "20px", opacity: 0.6, color: "white" }}
           >
             Genre: <strong>{activeGenre}</strong>
           </div>

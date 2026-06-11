@@ -227,7 +227,7 @@ const Profile: React.FC = () => {
                     <button
                       className="edit-profile-btn"
                       onClick={handleLogout}
-                      style={{ background: "transparent" }}
+
                     >
                       log out
                     </button>
