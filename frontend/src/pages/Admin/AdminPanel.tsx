@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer /Footer';
 import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 import { api } from '../../api/api';
 import type { AdminUser, Game } from '../../api/types';
 import './AdminPanel.css';
@@ -31,6 +32,7 @@ const UserModal: React.FC<UserModalProps> = ({ initial, onSave, onClose }) => {
   });
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const { showToast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,9 +44,12 @@ const UserModal: React.FC<UserModalProps> = ({ initial, onSave, onClose }) => {
           ? { username: form.username, email: form.email, role: form.role }
           : form,
       );
+      showToast(initial ? 'User updated successfully' : 'User created successfully', 'success');
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error');
+      const errorMsg = err instanceof Error ? err.message : 'Error';
+      setError(errorMsg);
+      showToast(errorMsg, 'error');
     } finally {
       setSaving(false);
     }
@@ -150,6 +155,7 @@ const GameModal: React.FC<GameModalProps> = ({ initial, onSave, onClose }) => {
   );
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const { showToast } = useToast();
 
   const set =
     (field: keyof GameFormData) =>
@@ -168,9 +174,12 @@ const GameModal: React.FC<GameModalProps> = ({ initial, onSave, onClose }) => {
     setSaving(true);
     try {
       await onSave(form);
+      showToast(initial ? 'Game updated successfully' : 'Game created successfully', 'success');
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error');
+      const errorMsg = err instanceof Error ? err.message : 'Error';
+      setError(errorMsg);
+      showToast(errorMsg, 'error');
     } finally {
       setSaving(false);
     }
@@ -255,6 +264,7 @@ const GameModal: React.FC<GameModalProps> = ({ initial, onSave, onClose }) => {
 const AdminPanel: React.FC = () => {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [tab, setTab] = useState<Tab>('users');
 
   const [users, setUsers] = useState<AdminUser[]>([]);
@@ -269,32 +279,43 @@ const AdminPanel: React.FC = () => {
     if (!isAdmin) navigate('/');
   }, [isAdmin, navigate]);
 
-  useEffect(() => {
-    if (tab === 'users') void loadUsers();
-    if (tab === 'games') void loadGames();
-  }, [tab]);
-
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     setUsersLoading(true);
     try {
-      setUsers(await api.admin.getUsers());
+      const data = await api.admin.getUsers();
+      setUsers(data);
+      showToast('Users loaded successfully', 'success');
     } catch (e) {
+      const errorMsg = e instanceof Error ? e.message : 'Failed to load users';
+      showToast(errorMsg, 'error');
       console.error(e);
     } finally {
       setUsersLoading(false);
     }
-  };
+  }, [showToast]);
 
-  const loadGames = async () => {
+  const loadGames = useCallback(async () => {
     setGamesLoading(true);
     try {
-      setGames(await api.admin.getGames());
+      const data = await api.admin.getGames();
+      setGames(data);
+      showToast('Games loaded successfully', 'success');
     } catch (e) {
+      const errorMsg = e instanceof Error ? e.message : 'Failed to load games';
+      showToast(errorMsg, 'error');
       console.error(e);
     } finally {
       setGamesLoading(false);
     }
-  };
+  }, [showToast]);
+
+  useEffect(() => {
+    if (tab === 'users') {
+      void loadUsers();
+    } else {
+      void loadGames();
+    }
+  }, [tab, loadUsers, loadGames]);
 
   const handleSaveUser = async (data: {
     username?: string;
@@ -318,8 +339,10 @@ const AdminPanel: React.FC = () => {
     try {
       await api.admin.deleteUser(user.id);
       setUsers((prev) => prev.filter((u) => u.id !== user.id));
+      showToast(`User "${user.username}" deleted successfully`, 'success');
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Delete failed');
+      const errorMsg = err instanceof Error ? err.message : 'Delete failed';
+      showToast(errorMsg, 'error');
     }
   };
 
@@ -338,8 +361,10 @@ const AdminPanel: React.FC = () => {
     try {
       await api.admin.deleteGame(game.id);
       setGames((prev) => prev.filter((g) => g.id !== game.id));
+      showToast(`Game "${game.title}" deleted successfully`, 'success');
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Delete failed');
+      const errorMsg = err instanceof Error ? err.message : 'Delete failed';
+      showToast(errorMsg, 'error');
     }
   };
 
@@ -396,11 +421,7 @@ const AdminPanel: React.FC = () => {
                         <tr key={user.id}>
                           <td>
                             {user.avatar ? (
-                              <img
-                                src={user.avatar}
-                                alt=""
-                                className="admin-avatar-img"
-                              />
+                              <img src={user.avatar} alt="" className="admin-avatar-img" />
                             ) : (
                               <div className="admin-avatar-placeholder">
                                 {user.username.slice(0, 2).toUpperCase()}
@@ -422,10 +443,7 @@ const AdminPanel: React.FC = () => {
                           </td>
                           <td>
                             <div className="admin-actions">
-                              <button
-                                className="ap-edit-btn"
-                                onClick={() => setEditingUser(user)}
-                              >
+                              <button className="ap-edit-btn" onClick={() => setEditingUser(user)}>
                                 edit
                               </button>
                               <button
@@ -496,10 +514,7 @@ const AdminPanel: React.FC = () => {
                           <td className="admin-muted">{game.developer}</td>
                           <td>
                             <div className="admin-actions">
-                              <button
-                                className="ap-edit-btn"
-                                onClick={() => setEditingGame(game)}
-                              >
+                              <button className="ap-edit-btn" onClick={() => setEditingGame(game)}>
                                 edit
                               </button>
                               <button

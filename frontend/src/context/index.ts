@@ -9,3 +9,6 @@ export type { CartItem, CartContextType } from "./CartContext";
 export { AuthContext, useAuth } from "./AuthContext";
 export { AuthProvider } from "./AuthProvider";
 export type { AuthContextType } from "./AuthContext";
+
+export { ToastProvider } from './ToastProvider';
+export { useToast } from './ToastContext';

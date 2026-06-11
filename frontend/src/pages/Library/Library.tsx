@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer /Footer";
 import { useAuth } from "../../context/AuthContext";
+import { useToast } from "../../context/ToastContext";
 import { api } from "../../api/api";
 import type { Order } from "../../api/types";
 import "./Library.css";
@@ -10,6 +11,7 @@ import "./Library.css";
 const Library: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const { showToast } = useToast();
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -17,26 +19,29 @@ const Library: React.FC = () => {
   const [search, setSearch] = useState("");
   const [openCodeItemId, setOpenCodeItemId] = useState<number | null>(null);
 
+  const loadOrders = useCallback(async () => {
+    setLoading(true);
+    setLoadError("");
+    try {
+      const data = await api.users.orders();
+      setOrders(data);
+      showToast("Library updated successfully", "success");
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Failed to load";
+      setLoadError(errorMsg);
+      showToast(errorMsg, "error");
+    } finally {
+      setLoading(false);
+    }
+  }, [showToast]);
+
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/login");
       return;
     }
     void loadOrders();
-  }, [isAuthenticated, navigate]);
-
-  const loadOrders = async () => {
-    setLoading(true);
-    setLoadError("");
-    try {
-      const data = await api.users.orders();
-      setOrders(data);
-    } catch (err) {
-      setLoadError(err instanceof Error ? err.message : "Failed to load");
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [isAuthenticated, navigate, loadOrders]);
 
   const items = useMemo(
     () =>
@@ -74,10 +79,10 @@ const Library: React.FC = () => {
     }
   };
 
-  const handleCopy = async (code: string) => {
+  const handleCopy = async (code: string, title: string) => {
     try {
       await navigator.clipboard.writeText(code);
-      alert("Key copied to clipboard");
+      showToast(`Key for "${title}" copied to clipboard`, "success");
     } catch {
       const ta = document.createElement("textarea");
       ta.value = code;
@@ -85,12 +90,16 @@ const Library: React.FC = () => {
       ta.select();
       document.execCommand("copy");
       document.body.removeChild(ta);
-      alert("Key copied to clipboard");
+      showToast(`Key for "${title}" copied to clipboard`, "success");
     }
   };
 
   const handleSearch = (term: string) => {
     setSearch(term);
+  };
+
+  const handleRefresh = () => {
+    void loadOrders();
   };
 
   return (
@@ -103,9 +112,7 @@ const Library: React.FC = () => {
             <h2 className="library-heading">your library</h2>
             <button
               className="library-btn library-btn-muted"
-              onClick={() => {
-                void loadOrders();
-              }}
+              onClick={handleRefresh}
             >
               refresh
             </button>
@@ -144,6 +151,9 @@ const Library: React.FC = () => {
                     alt={it.title}
                     className="library-image"
                     loading="lazy"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://placehold.co/100x140?text=No+Image';
+                    }}
                   />
                   <div className="library-title">{it.title}</div>
                   <div className="library-meta">
@@ -170,7 +180,7 @@ const Library: React.FC = () => {
                         <button
                           className="library-btn"
                           onClick={() => {
-                            void handleCopy(it.code);
+                            void handleCopy(it.code, it.title);
                           }}
                         >
                           copy

@@ -11,12 +11,16 @@ import Profile from "./pages/Profile/Profile";
 import AdminPanel from "./pages/Admin/AdminPanel";
 import Library from "./pages/Library/Library";
 import UnderDevelopment from './pages/UnderDevelopment/UnderDevelopment';
+import { ToastProvider } from './context/ToastProvider';
+
+
 
 function App() {
   return (
     <AuthProvider>
       <ThemeProvider>
         <CartProvider>
+          <ToastProvider>
           <Router>
             <Routes>
               <Route path="/" element={<HomePage />} />
@@ -29,6 +33,7 @@ function App() {
               <Route path="/under-development" element={<UnderDevelopment />} />
             </Routes>
           </Router>
+          </ToastProvider>
         </CartProvider>
       </ThemeProvider>
     </AuthProvider>

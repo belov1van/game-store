@@ -1,5 +1,7 @@
+import React from "react";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
+import { useToast } from "../../context/ToastContext";
 import { api } from "../../api/api";
 import "primeicons/primeicons.css";
 import "./Cart.css";
@@ -19,6 +21,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
     getTotalItems,
   } = useCart();
   const { isAuthenticated } = useAuth();
+  const { showToast } = useToast();
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -28,12 +31,12 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
 
   const handleCheckout = async () => {
     if (cartItems.length === 0) {
-      alert("Your cart is empty!");
+      showToast("Your cart is empty!", "warning");
       return;
     }
 
     if (!isAuthenticated) {
-      alert("Please log in to checkout.");
+      showToast("Please log in to checkout.", "error");
       return;
     }
 
@@ -41,16 +44,25 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
       await api.orders.create(
         cartItems.map((item) => ({ gameId: item.id, quantity: item.quantity })),
       );
-      alert(
-        `Order placed! Total: $${getTotalPrice().toFixed(2)}\n\nYou can view your game keys in Profile → purchased games → press "details".`,
-      );
+      showToast(`Order placed! Total: $${getTotalPrice().toFixed(2)}`, "success");
       clearCart();
       onClose();
     } catch (err) {
-      alert(
+      showToast(
         `Checkout failed: ${err instanceof Error ? err.message : "Unknown error"}`,
+        "error"
       );
     }
+  };
+
+  const handleClearCart = () => {
+    clearCart();
+    showToast("Cart has been cleared", "info");
+  };
+
+  const handleRemoveItem = (id: number, title: string) => {
+    removeFromCart(id);
+    showToast(`${title} removed from cart`, "info");
   };
 
   if (!isOpen) return null;
@@ -122,7 +134,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
                   </div>
                   <button
                     className="cart-item-remove"
-                    onClick={() => removeFromCart(item.id)}
+                    onClick={() => handleRemoveItem(item.id, item.title)}
                   >
                     <i className="pi pi-trash"></i>
                   </button>
@@ -139,7 +151,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
               <span className="total-price">${getTotalPrice().toFixed(2)}</span>
             </div>
             <div className="cart-actions">
-              <button className="clear-cart-btn" onClick={clearCart}>
+              <button className="clear-cart-btn" onClick={handleClearCart}>
                 <i className="pi pi-trash" style={{ marginRight: "8px" }}></i>
                 clear cart
               </button>

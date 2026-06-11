@@ -332,7 +332,6 @@ const Profile: React.FC = () => {
                       <div
                         className="purchase-code"
                         style={{
-                          marginTop: 8,
                           padding: "8px 12px",
                           borderRadius: 8,
                           background: "var(--hover-bg)",
