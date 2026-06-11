@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer /Footer";
 import { useAuth } from "../../context/AuthContext";
@@ -173,7 +173,7 @@ const Profile: React.FC = () => {
                   }}
                 />
               ) : (
-                <div className="avatar-icon">👤</div>
+                <div className="avatar-icon"></div>
               )}
               <input
                 ref={fileInputRef}
@@ -193,8 +193,8 @@ const Profile: React.FC = () => {
                   {avatarUploading
                     ? "uploading..."
                     : profile.avatar
-                      ? "change avatar"
-                      : "add avatar"}
+                    ? "change avatar"
+                    : "add avatar"}
                 </button>
                 {profile.avatar && (
                   <button
@@ -299,7 +299,13 @@ const Profile: React.FC = () => {
             <h2 className="section-title">purchased games</h2>
             <div className="recent-games-list">
               {orders.length === 0 && (
-                <p style={{ padding: "16px", opacity: 0.6 }}>
+                <p
+                  style={{
+                    padding: "16px",
+                    opacity: 0.6,
+                    color: "var(--text-primary)",
+                  }}
+                >
                   No purchases yet.
                 </p>
               )}
@@ -316,7 +322,7 @@ const Profile: React.FC = () => {
                       className="details-btn"
                       onClick={() => {
                         setOpenCodeItemId(
-                          openCodeItemId === item.id ? null : item.id,
+                          openCodeItemId === item.id ? null : item.id
                         );
                       }}
                     >
@@ -339,7 +345,7 @@ const Profile: React.FC = () => {
                       </div>
                     )}
                   </div>
-                )),
+                ))
               )}
             </div>
           </div>
@@ -349,15 +355,21 @@ const Profile: React.FC = () => {
             <div className="settings-list">
               <div className="setting-item">
                 <span className="setting-label">notification preferences</span>
-                <button className="setting-btn">manage</button>
+                <Link to="/under-development">
+                  <button className="setting-btn">manage</button>
+                </Link>
               </div>
               <div className="setting-item">
                 <span className="setting-label">privacy settings</span>
-                <button className="setting-btn">manage</button>
+                <Link to="/under-development">
+                  <button className="setting-btn">manage</button>
+                </Link>
               </div>
               <div className="setting-item">
                 <span className="setting-label">payment methods</span>
-                <button className="setting-btn">manage</button>
+                <Link to="/under-development">
+                  <button className="setting-btn">manage</button>
+                </Link>
               </div>
             </div>
           </div>

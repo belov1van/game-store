@@ -1,0 +1,119 @@
+.under-dev-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #667eea;
+}
+
+.under-dev-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.under-dev-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap:10px;
+  max-width: 500px;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 48px 40px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.under-dev-icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+}
+
+.under-dev-title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16px;
+  font-family: "Courier New", monospace;
+  text-transform: lowercase;
+}
+
+.under-dev-description {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.under-dev-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: #667eea;
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background 0.2s;
+  text-transform: lowercase;
+}
+
+.under-dev-btn:hover {
+  background: #5a67d8;
+}
+
+[data-theme="dark"] .under-dev-container {
+  background: #1a1a2e;
+}
+
+[data-theme="dark"] .under-dev-content {
+  background: #1e1e2e;
+}
+
+[data-theme="dark"] .under-dev-title {
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] .under-dev-description {
+  color: #b0b0b0;
+}
+
+[data-theme="dark"] .under-dev-btn {
+  background: #5a4ac7;
+}
+
+[data-theme="dark"] .under-dev-btn:hover {
+  background: #4a3ab7;
+}
+
+[data-theme="dark"] .under-dev-message {
+    color: #b0b0b0;
+}
+
+[data-theme="dark"] .under-dev-icon i {
+  color: #ffffff;
+}
+
+@media (max-width: 480px) {
+  .under-dev-content {
+    padding: 32px 24px;
+  }
+  
+  .under-dev-title {
+    font-size: 24px;
+  }
+  
+  .under-dev-icon {
+    font-size: 48px;
+  }
+  
+  .under-dev-description {
+    font-size: 14px;
+  }
+}

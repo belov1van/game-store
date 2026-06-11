@@ -53,7 +53,7 @@ const AboutUs: React.FC = () => {
         </section>
 
         <section className="features-section">
-          <h2 className="section-title">why choose us</h2>
+          <h2 className="section-title-about">why choose us</h2>
           <div className="features-grid">
             {features.map((feature, index) => (
               <div key={index} className="feature-card">
@@ -65,7 +65,7 @@ const AboutUs: React.FC = () => {
         </section>
         
         <section className="team-section">
-          <h2 className="section-title">developer</h2>
+          <h2 className="section-title-about">developer</h2>
           <div className="team-grid">
             {teamMember.map((member, index) => (
               <a

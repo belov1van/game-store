@@ -10,6 +10,7 @@ import AboutUs from "./pages/About-us/AboutUs";
 import Profile from "./pages/Profile/Profile";
 import AdminPanel from "./pages/Admin/AdminPanel";
 import Library from "./pages/Library/Library";
+import UnderDevelopment from './pages/UnderDevelopment/UnderDevelopment';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/library" element={<Library />} />
               <Route path="/admin" element={<AdminPanel />} />
+              <Route path="/under-development" element={<UnderDevelopment />} />
             </Routes>
           </Router>
         </CartProvider>

@@ -50,7 +50,7 @@
   margin-bottom: 40px;
 }
 
-.section-title {
+.section-title-about {
   text-align: center;
   font-size: 32px;
   color: white !important;
@@ -185,8 +185,8 @@
   background: rgba(139, 158, 255, 0.25);
 }
 
-[data-theme="dark"] .section-title {
-  color: white;
+[data-theme="dark"] .section-title-about {
+  color: white !important;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -206,6 +206,7 @@
 
   .section-title {
     font-size: 28px;
+    
   }
 
   .features-grid {

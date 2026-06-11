@@ -41,7 +41,6 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ isOpen, onClose }) => {
         </div>
 
         <div className="sidebar-content">
-          {/* ── Categories ───────────────────────────────── */}
           <div className="menu-section">
             <h3>Game Categories</h3>
 
@@ -106,12 +105,12 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ isOpen, onClose }) => {
                 </Link>
               </li>
               <li>
-                <Link to="/support" onClick={onClose}>
+                <Link to="/under-development" onClick={onClose}>
                   Support
                 </Link>
               </li>
               <li>
-                <Link to="/faq" onClick={onClose}>
+                <Link to="/under-development" onClick={onClose}>
                   FAQ
                 </Link>
               </li>

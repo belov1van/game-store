@@ -25,7 +25,7 @@
 .admin-panel-title {
   font-size: 28px;
   font-weight: 700;
-  color: var(--text-primary);
+  color: white;
   margin: 0;
 }
 
@@ -334,4 +334,29 @@
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+[data-theme="dark"] .admin-table td strong {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .admin-table td strong {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .admin-table td:has(strong) + td {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .admin-table td:nth-child(5) {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+[data-theme="dark"] .admin-table td {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .admin-table td:contains("$") {
+  color: #ffffff;
 }
